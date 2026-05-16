@@ -119,3 +119,50 @@ class BSTRekamMedis:
             result.append(node.rekord)
             self._inorder_recursive(node.right, result)
 
+
+# =====================================
+# TEST PROGRAM BST REKAM MEDIS
+# =====================================
+if __name__ == "__main__":
+    # Membuat object BST
+    bst = BSTRekamMedis()
+
+    # =================================
+    # INSERT DATA
+    # =================================
+    bst.insert(RekorMedis(102, "Andi", ["Pemeriksaan Umum", "Pemberian Obat"]))
+    bst.insert(RekorMedis(101, "Budi", ["Tes Darah"]))
+    bst.insert(RekorMedis(105, "Citra", ["Rontgen", "Kontrol"]))
+    bst.insert(RekorMedis(103, "Dina", ["Vaksinasi"]))
+    bst.insert(RekorMedis(104, "Eko", ["Rawat Jalan"]))
+
+    # =================================
+    # MENAMPILKAN DATA TERURUT
+    # =================================
+    print("\n=== DATA REKAM MEDIS (INORDER) ===")
+    for data in bst.inorder():
+        print(f"No RM      : {data.no_rm}\nNama       : {data.nama}\nRiwayat    : {data.riwayat}\n")
+
+    # =================================
+    # SEARCH DATA
+    # =================================
+    print("\n=== SEARCH DATA ===")
+    hasil = bst.search(103)
+
+    if hasil:
+        print("Data ditemukan:")
+        print(f"No RM   : {hasil.no_rm}")
+        print(f"Nama    : {hasil.nama}")
+        print(f"Riwayat : {hasil.riwayat}")
+    else:
+        print("Data tidak ditemukan")
+
+    # =================================
+    # DELETE DATA
+    # =================================
+    print("\n=== DELETE DATA ===")
+    bst.delete(102)
+
+    print("Data setelah no_rm 102 dihapus:\n")
+    for data in bst.inorder():
+        print(f"No RM      : {data.no_rm}\nNama       : {data.nama}\nRiwayat    : {data.riwayat}\n")
