@@ -1,25 +1,31 @@
 # =====================================================
 # SORTING MODULE
-# Implementasi Insertion Sort & Selection Sort
-# langsung pada Linked List (bukan Python list biasa)
-# Big-O: O(n²) untuk keduanya
+# Insertion Sort & Selection Sort pada Linked List
+# Big-O: O(n²)
 # =====================================================
 
-from src.data_structures.node import Node
+import numpy as np
+import time
+np.random.seed(42)
+
+from typing import Optional
+
+
+class LLNode:
+    def __init__(self, data=None):
+        self.data = data
+        self.next: Optional['LLNode'] = None
 
 
 class LinkedListPasien:
-    """
-    Linked List khusus untuk menyimpan daftar pasien selesai.
-    Digunakan sebagai input sorting laporan harian.
-    """
+    """Linked List untuk menyimpan daftar pasien selesai"""
     def __init__(self):
-        self.head = None
-        self._size = 0
+        self.head: Optional[LLNode] = None
+        self._size: int = 0
 
-    def append(self, pasien):
+    def append(self, pasien) -> None:
         """Tambah pasien di akhir. Big-O: O(n)"""
-        node = Node(pasien)
+        node = LLNode(pasien)
         if not self.head:
             self.head = node
             self._size += 1
@@ -31,7 +37,7 @@ class LinkedListPasien:
         self._size += 1
 
     def to_list(self):
-        """Konversi ke Python list untuk ditampilkan. Big-O: O(n)"""
+        """Konversi ke Python list. Big-O: O(n)"""
         result = []
         cur = self.head
         while cur:
@@ -45,22 +51,20 @@ class LinkedListPasien:
 
 def insertion_sort_waktu_tunggu(ll: LinkedListPasien) -> LinkedListPasien:
     """
-    Insertion Sort berdasarkan waktu_tunggu DESCENDING
-    (pasien tunggu terlama tampil pertama).
+    Insertion Sort berdasarkan waktu_tunggu DESCENDING.
     Implementasi langsung pada Linked List.
-    Big-O: O(n²) worst-case, O(n) jika sudah terurut.
+    Big-O: O(n²) worst-case, O(n) best-case (data hampir terurut)
     """
     if not ll.head or not ll.head.next:
         return ll
 
-    sorted_head = None  # head linked list hasil sort
+    sorted_head = None
 
     cur = ll.head
     while cur:
-        next_node = cur.next  # simpan node berikutnya
+        next_node = cur.next
         cur.next = None
 
-        # Sisipkan cur ke posisi yang tepat di sorted list
         if sorted_head is None or cur.data.waktu_tunggu > sorted_head.data.waktu_tunggu:
             cur.next = sorted_head
             sorted_head = cur
@@ -81,17 +85,15 @@ def insertion_sort_waktu_tunggu(ll: LinkedListPasien) -> LinkedListPasien:
 
 def selection_sort_no_antrian(ll: LinkedListPasien) -> LinkedListPasien:
     """
-    Selection Sort berdasarkan no_antrian ASCENDING
-    (nomor antrian terkecil tampil pertama).
+    Selection Sort berdasarkan no_antrian ASCENDING.
     Implementasi langsung pada Linked List.
-    Big-O: O(n²) selalu.
+    Big-O: O(n²) selalu
     """
     if not ll.head or not ll.head.next:
         return ll
 
     cur = ll.head
     while cur:
-        # Cari node dengan no_antrian terkecil dari cur ke akhir
         min_node = cur
         check = cur.next
         while check:
@@ -99,9 +101,7 @@ def selection_sort_no_antrian(ll: LinkedListPasien) -> LinkedListPasien:
                 min_node = check
             check = check.next
 
-        # Tukar data (bukan pointer, lebih simpel di LL)
         cur.data, min_node.data = min_node.data, cur.data
-
         cur = cur.next
 
     return ll
