@@ -1,6 +1,5 @@
 from typing import Optional, List, Tuple
 
-
 # ── Node untuk Linked List dalam Adjacency List ─────────────────────
 class EdgeNode:
     """Node untuk menyimpan informasi tetangga dan bobot."""
@@ -11,7 +10,6 @@ class EdgeNode:
         self.dest = dest
         self.weight = weight
         self.next: Optional['EdgeNode'] = None
-
 
 # ── Struktur Data Graph ─────────────────────────────────────────────
 class ReferralGraph:
@@ -50,7 +48,6 @@ class ReferralGraph:
             current = current.next
 
         return options
-
 
 # ── Unit Test ───────────────────────────────────────────────────────
 def test_graph_referral():
@@ -93,7 +90,6 @@ def test_graph_referral():
     print("\n" + "=" * 40)
     print("HASIL: TEST GRAPH RUJUKAN LULUS 100%")
     print("=" * 40)
-
 
 if __name__ == "__main__":
     test_graph_referral()

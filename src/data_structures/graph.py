@@ -25,10 +25,7 @@ class ReferralGraph:
             self.adj[nama_poli] = None
 
     def add_referral(self, u: str, v: str, weight: int = 1) -> None:
-        """
-        Menambahkan alur rujukan dari poli u ke poli v.
-        Big-O: O(1) karena penyisipan dilakukan di head linked list [4].
-        """
+        "Menambahkan alur rujukan dari poli u ke poli v."
         self.add_poli(u)
         self.add_poli(v)
         
@@ -44,10 +41,7 @@ class ReferralGraph:
             self.adj[v] = new_node_rev
 
     def get_referral_options(self, poli: str) -> List[Tuple[str, int]]:
-        """
-        Mengambil semua opsi rujukan dari poli tertentu.
-        Big-O: O(deg(u)) atau linear terhadap jumlah rujukan poli tersebut [4].
-        """
+        "Mengambil semua opsi rujukan dari poli tertentu."
         options = []
         current = self.adj.get(poli)
         while current:
