@@ -24,12 +24,12 @@ class RekamMedis:
 # =================================================================
 # IMPORTS DARI REPOSITORI BRANCH DEV
 # =================================================================
-from data_structures.queue import PriorityQueue
-from data_structures.stack import Stack
-from data_structures.bst import BSTRekamMedis
+from src.data_structures.queue import PriorityQueue
+from src.data_structures.stack import Stack
+from src.data_structures.bst import BSTRekamMedis
 
 # FIX 1: Import nama fungsi asli & kelas Linked List dari modul_4_sorting
-from modules.modul_4_sorting import insertion_sort_waktu_tunggu, LinkedListPasien
+from src.modules.modul_4_sorting import insertion_sort_waktu_tunggu, LinkedListPasien
 
 # =================================================================
 # KONSTANTA & PARAMETER SISTEM
