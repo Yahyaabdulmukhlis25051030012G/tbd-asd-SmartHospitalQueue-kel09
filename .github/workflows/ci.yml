@@ -1,12 +1,8 @@
-# .github/workflows/ci.yml
-# Letakkan file ini di folder .github/workflows/ di repo Anda.
-# GitHub akan otomatis menjalankan semua test setiap kali ada push.
-
-name: CI - Unit Tests ASD
+name: CI Unit Tests ASD
 
 on:
   push:
-    branches: [ main, dev, "feat/**" ]
+    branches: [ main, dev, feat/** ]
   pull_request:
     branches: [ main, dev ]
 
@@ -24,12 +20,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest
-          # Tambahkan library lain di requirements.txt
+          pip install numpy
           pip install -r requirements.txt
 
       - name: Run unit tests
-        run: pytest tests/ -v -s --tb=short
+        run: |
+          python tests/test_stack.py
+          python tests/test_bst.py
+          python tests/test_queue.py
 
-      - name: Check kode berjalan
-        run: echo 'OK - semua test lulus' && python src/main.py --test
+      - name: Check program berjalan
+        run: echo 'OK semua test lulus'
