@@ -1,8 +1,3 @@
-# =====================================================
-# TEST STACK
-# Validasi Stack menggunakan numpy seed=42
-# =====================================================
-
 import numpy as np
 import random
 import time
