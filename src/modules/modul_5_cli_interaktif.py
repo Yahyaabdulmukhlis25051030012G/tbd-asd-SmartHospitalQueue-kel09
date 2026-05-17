@@ -31,8 +31,6 @@ class RekamMedis:
 from data_structures.queue import PriorityQueue
 from data_structures.stack import Stack
 from data_structures.bst import BSTRekamMedis
-
-# FIX 1: Import nama fungsi asli & kelas Linked List dari modul_4_sorting
 from modules.modul_4_sorting import insertion_sort_waktu_tunggu, LinkedListPasien
 
 # =================================================================
@@ -42,9 +40,9 @@ POLI = ["Umum", "Jantung", "Ortopedi", "Anak", "Gigi"]
 PRIORITAS_MAP = {1: "KRITIS", 2: "PRIORITAS", 3: "REGULER"}
 
 def tampilkan_menu_utama():
-    print("\n" + "="*55)
+    print("\n" + "="*60)
     print("🏥  SMART HOSPITAL QUEUE SYSTEM (CLI INTERAKTIF)  🏥")
-    print("="*55)
+    print("="*60)
     print("[1] Daftarkan Pasien Baru (Enqueue)")
     print("[2] Panggil Pasien Berikutnya (Dequeue)")
     print("[3] Batalkan Catatan/Tindakan Terakhir Dokter (Undo)")
@@ -53,7 +51,7 @@ def tampilkan_menu_utama():
     print("[6] Tampilkan Semua Rekam Medis Terdaftar (BST Inorder)")
     print("[7] Cetak Laporan Evaluasi Waktu Tunggu Pasien (Sorting)")
     print("[8] Keluar")
-    print("-" * 55)
+    print("-" * 60)
 
 def main():
     # Inisialisasi struktur data per-poliklinik
@@ -104,15 +102,15 @@ def main():
                 print("❌ Input harus berupa angka! Otomatis diset ke REGULER (3).")
                 prioritas = 3
 
-            pasien_baru = Pasien(
-                no_antrian=counter_antrian,
-                nama=nama,
-                poli=poli_target,
-                prioritas=prioritas,
-                waktu_daftar=time.time()
-            )
+            pasien_baru = Pasien(counter_antrian, nama, poli_target, prioritas, time.time())
+            
+            start_time = time.perf_counter()
             queues[poli_target].enqueue(pasien_baru)
-            print(f"\n💾 [SUKSES] {nama} masuk antrean Poli {poli_target} | No. Antrean: {counter_antrian}")
+            exec_time = (time.perf_counter() - start_time) * 1000 # dalam milidetik
+            
+            print(f"\n💾 [SUKSES] {nama} masuk antrean Poli {poli_target} | No: {counter_antrian}")
+            print(f"⏱️  [ANALISIS BIG-O] Enqueue Priority Queue selesai dalam {exec_time:.4f} ms.")
+            print(f"   => Teori: O(n) (Worst Case) karena mencari posisi prioritas yang tepat di Linked List.")
             counter_antrian += 1
 
         # =========================================================
@@ -131,7 +129,9 @@ def main():
                 print("❌ Pilihan poliklinik tidak valid!")
                 continue
 
+            start_time = time.perf_counter()
             pasien_dipanggil = queues[poli_target].dequeue()
+            exec_time = (time.perf_counter() - start_time) * 1000
             
             if pasien_dipanggil:
                 waktu_sekarang = time.time()
@@ -139,13 +139,13 @@ def main():
                 
                 print(f"\n📢 [PANGGILAN] No. Antrean {pasien_dipanggil.no_antrian}: {pasien_dipanggil.nama}")
                 print(f"    Silakan menuju ke Ruang Poli {pasien_dipanggil.poli} ({PRIORITAS_MAP[pasien_dipanggil.prioritas]})")
-                print(f"    Waktu tunggu: {pasien_dipanggil.waktu_tunggu:.2f} detik")
-
+                
                 log_tindakan = f"Memeriksa Pasien No.{pasien_dipanggil.no_antrian} ({pasien_dipanggil.nama})"
                 stacks[poli_target].push(log_tindakan)
-                
-                # Simpan ke list selesai
                 pasien_selesai_list.append(pasien_dipanggil)
+                
+                print(f"⏱️  [ANALISIS BIG-O] Dequeue selesai dalam {exec_time:.4f} ms.")
+                print(f"   => Teori: O(1) karena hanya mengambil Node paling depan (Head).")
             else:
                 print(f"ℹ️ Antrean Poli {poli_target} kosong.")
 
@@ -165,9 +165,14 @@ def main():
                 print("❌ Pilihan salah!")
                 continue
 
+            start_time = time.perf_counter()
             log_dibatalkan = stacks[poli_target].pop()
+            exec_time = (time.perf_counter() - start_time) * 1000
+
             if log_dibatalkan:
                 print(f"\n↩️ [UNDO BERHASIL] Berhasil membatalkan: '{log_dibatalkan}'")
+                print(f"⏱️  [ANALISIS BIG-O] Stack Pop selesai dalam {exec_time:.4f} ms.")
+                print(f"   => Teori: O(1) karena hanya menghapus Node teratas (Top).")
             else:
                 print("⚠️ Tidak ada catatan tindakan dokter yang bisa dibatalkan.")
 
@@ -184,8 +189,13 @@ def main():
                 riwayat_list = [p.strip() for p in penyakit]
                 data_rm = RekamMedis(no_rm, nama, riwayat_list)
                 
+                start_time = time.perf_counter()
                 bst_rm.insert(data_rm)
+                exec_time = (time.perf_counter() - start_time) * 1000
+
                 print(f"💾 [SUKSES] Data rekam medis No. {no_rm} disimpan ke database BST.")
+                print(f"⏱️  [ANALISIS BIG-O] BST Insert selesai dalam {exec_time:.4f} ms.")
+                print(f"   => Teori: O(log n) rata-rata, karena menelusuri kedalaman Tree (Height).")
             except ValueError:
                 print("❌ Nomor Rekam Medis harus berupa angka!")
 
@@ -196,15 +206,17 @@ def main():
             print("\n--- PENCARIAN REKAM MEDIS PASIEN (BST SEARCH) ---")
             try:
                 cari_no = int(input("Masukkan Nomor Rekam Medis yang dicari: "))
-                start_time = time.time()
+                
+                start_time = time.perf_counter()
                 hasil = bst_rm.search(cari_no)
-                end_time = time.time()
+                exec_time = (time.perf_counter() - start_time) * 1000
                 
                 if hasil:
                     print(f"\n🔍 [DITEMUKAN] Data Pasien RM #{cari_no}")
                     print(f"    Nama Pasien : {hasil.nama}")
                     print(f"    Riwayat Medis: {', '.join(hasil.riwayat_penyakit)}")
-                    print(f"    Waktu Pencarian BST: {(end_time - start_time) * 1000:.4f} ms")
+                    print(f"⏱️  [ANALISIS BIG-O] BST Search selesai dalam {exec_time:.4f} ms.")
+                    print(f"   => Teori: O(log n) rata-rata, algoritma membelah (divide) rute pencarian.")
                 else:
                     print(f"❌ Data Rekam Medis #{cari_no} tidak ditemukan.")
             except ValueError:
@@ -215,13 +227,18 @@ def main():
         # =========================================================
         elif pilihan == "6":
             print("\n--- DAFTAR ARSIP REKAM MEDIS SEBAGAI TREE (INORDER) ---")
-            all_rm = bst_rm.inorder()
             
+            start_time = time.perf_counter()
+            all_rm = bst_rm.inorder()
+            exec_time = (time.perf_counter() - start_time) * 1000
+
             if all_rm:
                 print(f"{'No RM':<10} | {'Nama Pasien':<20} | {'Riwayat Penyakit'}")
                 print("-" * 55)
                 for rm in all_rm:
                     print(f"{rm.no_rm:<10} | {rm.nama:<20} | {', '.join(rm.riwayat_penyakit)}")
+                print(f"\n⏱️  [ANALISIS BIG-O] BST Inorder Traversal selesai dalam {exec_time:.4f} ms.")
+                print(f"   => Teori: O(n) karena algoritma harus mengunjungi seluruh Node satu per satu.")
             else:
                 print("ℹ️ Database rekam medis kosong.")
 
@@ -234,15 +251,14 @@ def main():
                 print("⚠️ Belum ada pasien yang selesai dilayani hari ini.")
                 continue
             
-            # FIX 2: Konversi python list biasa ke LinkedListPasien (Struktur data buatanmu)
             ll_pasien = LinkedListPasien()
             for p in pasien_selesai_list:
                 ll_pasien.append(p)
             
-            # Jalankan sorting menggunakan fungsi asli dari modul kelompokmu
+            start_time = time.perf_counter()
             ll_terurut = insertion_sort_waktu_tunggu(ll_pasien)
-            
-            # Konversi kembali ke list Python agar mudah diloop menggunakan .to_list()
+            exec_time = (time.perf_counter() - start_time) * 1000
+
             laporan_terurut = ll_terurut.to_list()
             
             print("\n📋 Urutan Pasien Menunggu Paling Lama (Descending):")
@@ -250,6 +266,9 @@ def main():
             print("-" * 65)
             for p in laporan_terurut:
                 print(f"{p.no_antrian:<12} | {p.nama:<18} | {p.poli:<12} | {p.waktu_tunggu:.2f} detik")
+                
+            print(f"\n⏱️  [ANALISIS BIG-O] Linked List Insertion Sort selesai dalam {exec_time:.4f} ms.")
+            print(f"   => Teori: O(n^2) (Worst Case) karena adanya loop bersarang dalam Linked List.")
 
         # =========================================================
         # MENU 8: KELUAR
