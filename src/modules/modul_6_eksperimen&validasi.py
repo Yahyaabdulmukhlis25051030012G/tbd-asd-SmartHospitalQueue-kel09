@@ -8,9 +8,9 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.data_structures.queue import PriorityQueue
-from src.data_structures.stack import Stack
-from src.data_structures.bst import BSTRekamMedis
+from data_structures.queue import PriorityQueue
+from data_structures.stack import Stack
+from data_structures.bst import BSTRekamMedis
 
 @dataclass
 class Pasien:
